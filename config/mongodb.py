@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from pymongo.database import Database
+from .env import Env
 
-def getMongoDB(uri: str, db_name: str) -> Database:
-    conn = MongoClient(uri)
-    return conn[db_name]
+def getMongoDB() -> Database:
+    conn = MongoClient(Env.MONGODB_URI)
+    return conn[Env.MONGODB_NAME]

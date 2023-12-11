@@ -7,12 +7,12 @@ from domain.model.user import UserModel
 
 
 class UserRepo:
-    def __ini__(
+    def __init__(
         self,
         db: Database = Depends(getMongoDB),
     ):
         self.db = db
-        self.coll = db["users"]
+        self.coll = db[UserModel()._coll_name]
 
     def create(self, user: UserModel) -> UserModel:
         self.coll.insert_one(user.model_dump())

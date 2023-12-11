@@ -5,18 +5,32 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pytz import timezone
+from uvicorn.config import LOGGING_CONFIG
 
 from config.env import Env
+from config.mongodb import getMongoDB
+from utils import mongodb as mongodb_utils
 
 # logging config
 logging.Formatter.converter = lambda *args: datetime.now(
     tz=timezone(Env.TIMEZONE)
 ).timetuple()
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelprefix)s \033[92m%(message)s  ...[%(pathname)s@%(funcName)s():%(lineno)d]\033[0m",
-    datefmt="%d/%m/%Y %H:%M:%S",
+    level=logging.DEBUG if Env.DEBUG else logging.INFO,
+    format="%(asctime)s %(levelname)s: \033[92m%(message)s  ...[%(pathname)s@%(funcName)s():%(lineno)d]\033[0m",
+    datefmt="%d-%m-%Y %H:%M:%S",
 )
+
+# default uvicorn logging format
+LOGGING_CONFIG["formatters"]["default"][
+    "fmt"
+] = "%(asctime)s %(levelprefix)s %(message)s"
+LOGGING_CONFIG["formatters"]["default"]["datefmt"] = "%d-%m-%Y %H:%M:%S"
+# api call format
+LOGGING_CONFIG["formatters"]["access"][
+    "fmt"
+] = '%(asctime)s %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
+LOGGING_CONFIG["formatters"]["access"]["datefmt"] = "%d-%m-%Y %H:%M:%S"
 
 app = FastAPI()
 app.add_middleware(
@@ -28,6 +42,9 @@ app.add_middleware(
 )
 
 if __name__ == "__main__":
+    mongodb = getMongoDB()
+    mongodb_utils.ensureIndexes(db=mongodb)
+
     uvicorn.run(
         "main:app",
         host=Env.HOST,
