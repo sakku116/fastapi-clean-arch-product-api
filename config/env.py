@@ -12,5 +12,8 @@ class Env:
     RELOAD: bool = parseBool(getenv("RELOAD", "false"))
     TIMEZONE: str = getenv("TIMEZONE", "Asia/Jakarta")
 
+    JWT_EXP = int(getenv("JWT_EXP", 9)) # hours
+    JWT_SECRET = getenv("JWT_SECRET", "secret")
+
     MONGODB_URI: str = getenv("MONGODB_URI", "mongodb://localhost:27017")
     MONGODB_NAME: str = getenv("MONGODB_NAME", "test")

@@ -4,7 +4,7 @@ from bson import Int64
 
 from domain.model.user import UserModel
 from repository.user import UserRepo
-from utils import helper
+from utils import bcrypt as bcrypt_utils, helper
 
 
 def seedUsers(
@@ -15,7 +15,7 @@ def seedUsers(
         UserModel(
             id=helper.generateUUID(),
             username="superuser",
-            password=helper.hashPassword("superuser"),
+            password=bcrypt_utils.hashPassword("superuser"),
             created_at=time_now,
             updated_at=time_now,
         )

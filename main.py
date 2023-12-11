@@ -9,6 +9,8 @@ from uvicorn.config import LOGGING_CONFIG
 
 from config.env import Env
 from config.mongodb import getMongoDB
+from exception.http import CustomHTTPExc
+from utils import exception as exception_utils
 from utils import mongodb as mongodb_utils
 
 # logging config
@@ -33,6 +35,12 @@ LOGGING_CONFIG["formatters"]["access"][
 LOGGING_CONFIG["formatters"]["access"]["datefmt"] = "%d-%m-%Y %H:%M:%S"
 
 app = FastAPI()
+
+# register exception handlers
+app.add_exception_handler(CustomHTTPExc, exception_utils.customHttpExceptionHandler)
+app.add_exception_handler(Exception, exception_utils.defaultHttpExceptionHandler)
+
+# register middlewares
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
