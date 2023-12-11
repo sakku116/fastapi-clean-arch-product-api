@@ -23,4 +23,6 @@ def seedUsers(
 
     for user in user_list:
         existing_user = user_repo.getByUsername(user.username)
+        if existing_user:
+            user_repo.delete(existing_user.id)
         user_repo.create(user)

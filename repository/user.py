@@ -18,28 +18,28 @@ class UserRepo:
         self.coll.insert_one(user.model_dump())
         return user
 
-    def update(self, _id: str, user: UserModel) -> UserModel or None:
+    def update(self, id: str, user: UserModel) -> UserModel or None:
         _return = self.coll.find_one_and_update(
-            {"_id": _id},
-            {"$set": user.model_dump(exclude={"_id"})},
+            {"id": id},
+            {"$set": user.model_dump(exclude={"id"})},
             return_document=ReturnDocument.AFTER,
         )
         return UserModel(**_return) if _return else None
 
-    def patch(self, _id: str, user: UserModel) -> UserModel or None:
+    def patch(self, id: str, user: UserModel) -> UserModel or None:
         _return = self.coll.find_one_and_update(
-            {"_id": _id},
-            {"$set": user.model_dump(exclude={"_id"}, exclude_unset=True)},
+            {"id": id},
+            {"$set": user.model_dump(exclude={"id"}, exclude_unset=True)},
             return_document=ReturnDocument.AFTER,
         )
         return UserModel(**_return) if _return else None
 
-    def delete(self, _id: str) -> UserModel or None:
-        user = self.coll.find_one_and_delete({"_id": _id})
+    def delete(self, id: str) -> UserModel or None:
+        user = self.coll.find_one_and_delete({"id": id})
         return UserModel(**user) if user else None
 
-    def getById(self, _id: str) -> UserModel or None:
-        user = self.coll.find_one({"_id": _id})
+    def getById(self, id: str) -> UserModel or None:
+        user = self.coll.find_one({"id": id})
         return UserModel(**user) if user else None
 
     def getByUsername(self, username: str) -> UserModel or None:
