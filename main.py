@@ -1,11 +1,24 @@
+import logging
+from datetime import datetime
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pytz import timezone
 
 from config.env import Env
 
-app = FastAPI()
+# logging config
+logging.Formatter.converter = lambda *args: datetime.now(
+    tz=timezone(Env.TIMEZONE)
+).timetuple()
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelprefix)s \033[92m%(message)s  ...[%(pathname)s@%(funcName)s():%(lineno)d]\033[0m",
+    datefmt="%d/%m/%Y %H:%M:%S",
+)
 
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
