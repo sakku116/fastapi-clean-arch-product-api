@@ -18,3 +18,6 @@ class PostResetPasswordReq(BaseModel):
 
 class PostCheckTokenReq(BaseModel):
     token: str
+
+class PostRefreshTokenReq(BaseModel):
+    refresh_token: str
