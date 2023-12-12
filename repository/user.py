@@ -3,8 +3,11 @@ from pymongo import ReturnDocument
 from pymongo.database import Database
 
 from config.mongodb import getMongoDB
+from domain.dto import user as user_dto
 from domain.model.user import UserModel
+import logging
 
+logger = logging.getLogger(__name__)
 
 class UserRepo:
     def __init__(
@@ -48,16 +51,21 @@ class UserRepo:
 
     def getList(
         self,
-        username: str = "",
-        page: int = 1,
-        limit: int = 10,
-        sort_by: str = "created_at",
-        sort_order: str = "desc",
+        schema: user_dto.UserGetListParam
     ) -> list[UserModel]:
+        filter = {"username": {"$regex": schema.username, "$options": "i"}}
+        if schema.role:
+            filter["role"] = schema.role
         users = (
-            self.coll.find(username)
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .sort(sort_by, 1 if sort_order == "asc" else -1)
+            self.coll.find(filter)
+            .skip((schema.page - 1) * schema.limit)
+            .limit(schema.limit)
+            .sort(schema.sort_by, 1 if schema.sort_order == "asc" else -1)
         )
         return [UserModel(**user) for user in users]
+
+    def count(self, role: str = "", username: str = "") -> int:
+        filter = {"username": {"$regex": username, "$options": "i"}}
+        if role:
+            filter["role"] = role
+        return self.coll.count_documents(filter)

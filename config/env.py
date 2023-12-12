@@ -17,5 +17,8 @@ class Env:
     JWT_REFRESH_EXP: int = int(getenv("JWT_REFRESH_EXP", 24)) # hours
     JWT_REFRESH_SECRET: str = getenv("JWT_REFRESH_SECRET", "secret")
 
+    INITIAL_USERNAME: str = getenv("INITIAL_USERNAME", "admin")
+    INITIAL_PASSWORD: str = getenv("INITIAL_PASSWORD", "admin")
+
     MONGODB_URI: str = getenv("MONGODB_URI", "mongodb://localhost:27017")
     MONGODB_NAME: str = getenv("MONGODB_NAME", "test")

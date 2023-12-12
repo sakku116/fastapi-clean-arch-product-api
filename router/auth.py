@@ -4,10 +4,11 @@ from domain.rest import auth_resp, generic_resp
 from domain.rest import auth_req
 from service.auth import AuthService
 from domain.model.user import UserModel
-from core.dependencies import verifyTokenDependency
+from core.dependencies import verifyToken
 
 AuthRouter = APIRouter(
     prefix="/auth",
+    tags=["Auth"],
 )
 
 
@@ -50,20 +51,20 @@ def refresh_token(
     )
 
 
-@AuthRouter.post("/register", response_model=generic_resp.BaseResp)
-def register(payload: auth_req.PostRegisterReq, auth_service: AuthService = Depends()):
-    user = auth_service.register(username=payload.username, password=payload.password)
-    return generic_resp.BaseResp(
-        error=False,
-        message=f"User {user.username} registered successfully",
-    )
+# @AuthRouter.post("/register", response_model=generic_resp.BaseResp)
+# def register(payload: auth_req.PostRegisterReq, auth_service: AuthService = Depends()):
+#     user = auth_service.register(username=payload.username, password=payload.password)
+#     return generic_resp.BaseResp(
+#         error=False,
+#         message=f"User {user.username} registered successfully",
+#     )
 
 
 @AuthRouter.post("/reset-password", response_model=generic_resp.BaseResp)
 def reset_password(
     payload: auth_req.PostResetPasswordReq,
     auth_service: AuthService = Depends(),
-    current_user: UserModel = Depends(verifyTokenDependency),
+    current_user: UserModel = Depends(verifyToken),
 ):
     user = auth_service.resetPassword(
         old=payload.old_password,

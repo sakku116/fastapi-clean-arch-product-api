@@ -56,8 +56,6 @@ class AuthService:
         return token, refresh_token
 
     def checkToken(self, token: str) -> UserModel:
-        token = token.removeprefix("Bearer ")
-
         claims = {}
         user_id = ""
         try:
@@ -131,38 +129,38 @@ class AuthService:
 
         return token, refresh_token
 
-    def register(self, username: str, password: str) -> UserModel:
-        # validate password
-        if " " in password:
-            exc = CustomHTTPExc(
-                status_code=400,
-                message="Password cannot contain spaces",
-            )
-            logger.error(exc)
-            raise exc
+    # def register(self, username: str, password: str) -> UserModel:
+    #     # validate password
+    #     if " " in password:
+    #         exc = CustomHTTPExc(
+    #             status_code=400,
+    #             message="Password cannot contain spaces",
+    #         )
+    #         logger.error(exc)
+    #         raise exc
 
-        user = self.user_repo.getByUsername(username)
-        if user:
-            exc = CustomHTTPExc(
-                status_code=400,
-                message="Username already exists",
-            )
-            logger.error(exc)
-            raise exc
+    #     user = self.user_repo.getByUsername(username)
+    #     if user:
+    #         exc = CustomHTTPExc(
+    #             status_code=400,
+    #             message="Username already exists",
+    #         )
+    #         logger.error(exc)
+    #         raise exc
 
-        hashed_pw = bcrypt_utils.hashPassword(password)
-        time_now = helper.generateTimeNowEpoch()
-        user = self.user_repo.create(
-            UserModel(
-                id=helper.generateUUID(),
-                username=username,
-                password=hashed_pw,
-                created_at=time_now,
-                updated_at=time_now,
-            )
-        )
+    #     hashed_pw = bcrypt_utils.hashPassword(password)
+    #     time_now = helper.generateTimeNowEpoch()
+    #     user = self.user_repo.create(
+    #         UserModel(
+    #             id=helper.generateUUID(),
+    #             username=username,
+    #             password=hashed_pw,
+    #             created_at=time_now,
+    #             updated_at=time_now,
+    #         )
+    #     )
 
-        return user
+    #     return user
 
     def resetPassword(
         self, old: str, new: str, confirm: str, current_user: UserModel

@@ -10,9 +10,12 @@ from uvicorn.config import LOGGING_CONFIG
 from config.env import Env
 from config.mongodb import getMongoDB
 from core.exceptions.http import CustomHTTPExc
+from repository.user import UserRepo
+from router.auth import AuthRouter
+from router.user import UserRouter
 from utils import exception as exception_utils
 from utils import mongodb as mongodb_utils
-from router.auth import AuthRouter
+from utils.seeder import users as users_seeder
 from core.logging import PackagePathFilter
 
 # logging config
@@ -55,10 +58,12 @@ app.add_middleware(
 
 # register routes
 app.include_router(AuthRouter)
+app.include_router(UserRouter)
 
 if __name__ == "__main__":
     mongodb = getMongoDB()
     mongodb_utils.ensureIndexes(db=mongodb)
+    users_seeder.seedUsers(user_repo=UserRepo(db=mongodb))
 
     uvicorn.run(
         "main:app",
