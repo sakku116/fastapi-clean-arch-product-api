@@ -1,8 +1,6 @@
-from dotenv import load_dotenv
 from dataclasses import dataclass
 from os import getenv
 from utils.helper import parseBool
-load_dotenv()
 
 @dataclass(frozen=True)
 class Env:
