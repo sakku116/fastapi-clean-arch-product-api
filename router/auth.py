@@ -51,13 +51,13 @@ def refresh_token(
     )
 
 
-# @AuthRouter.post("/register", response_model=generic_resp.BaseResp)
-# def register(payload: auth_req.PostRegisterReq, auth_service: AuthService = Depends()):
-#     user = auth_service.register(username=payload.username, password=payload.password)
-#     return generic_resp.BaseResp(
-#         error=False,
-#         message=f"User {user.username} registered successfully",
-#     )
+@AuthRouter.post("/register", response_model=generic_resp.BaseResp)
+def register(payload: auth_req.PostRegisterReq, auth_service: AuthService = Depends()):
+    user = auth_service.register(username=payload.username, password=payload.password)
+    return generic_resp.BaseResp(
+        error=False,
+        message=f"User {user.username} registered successfully",
+    )
 
 
 @AuthRouter.post("/reset-password", response_model=generic_resp.BaseResp)
