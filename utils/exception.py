@@ -1,7 +1,7 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from exception.http import CustomHTTPExc
+from core.exceptions.http import CustomHTTPExc
 from domain.rest import generic_resp
 
 

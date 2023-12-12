@@ -9,9 +9,10 @@ from uvicorn.config import LOGGING_CONFIG
 
 from config.env import Env
 from config.mongodb import getMongoDB
-from exception.http import CustomHTTPExc
+from core.exceptions.http import CustomHTTPExc
 from utils import exception as exception_utils
 from utils import mongodb as mongodb_utils
+from router.auth import AuthRouter
 
 # logging config
 logging.Formatter.converter = lambda *args: datetime.now(
@@ -48,6 +49,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# register routes
+app.include_router(AuthRouter)
 
 if __name__ == "__main__":
     mongodb = getMongoDB()
