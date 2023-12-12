@@ -13,6 +13,7 @@ from core.exceptions.http import CustomHTTPExc
 from utils import exception as exception_utils
 from utils import mongodb as mongodb_utils
 from router.auth import AuthRouter
+from core.logging import PackagePathFilter
 
 # logging config
 logging.Formatter.converter = lambda *args: datetime.now(
@@ -23,6 +24,8 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s: \033[92m%(message)s  ...[%(pathname)s@%(funcName)s():%(lineno)d]\033[0m",
     datefmt="%d-%m-%Y %H:%M:%S",
 )
+for logger in logging.root.handlers:
+    logger.addFilter(PackagePathFilter())
 
 # default uvicorn logging format
 LOGGING_CONFIG["formatters"]["default"][
