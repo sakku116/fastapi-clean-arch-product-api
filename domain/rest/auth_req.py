@@ -1,11 +1,5 @@
 from pydantic import BaseModel
 
-
-class PostLoginReq(BaseModel):
-    username: str
-    password: str
-
-
 class PostRegisterReq(BaseModel):
     username: str
     password: str

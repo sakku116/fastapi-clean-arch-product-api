@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form
 
 from domain.rest import auth_resp, generic_resp
 from domain.rest import auth_req
@@ -12,10 +12,12 @@ AuthRouter = APIRouter(
 
 
 @AuthRouter.post("/login", response_model=auth_resp.AuthLoginBaseResp)
-def login(payload: auth_req.PostLoginReq, auth_service: AuthService = Depends()):
-    token, refresh_token = auth_service.login(
-        username=payload.username, password=payload.password
-    )
+def login(
+    username: str = Form(),
+    password: str = Form(),
+    auth_service: AuthService = Depends(),
+):
+    token, refresh_token = auth_service.login(username=username, password=password)
     return auth_resp.AuthLoginBaseResp(
         error=False,
         message="OK",
