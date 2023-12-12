@@ -132,6 +132,15 @@ class AuthService:
         return token, refresh_token
 
     def register(self, username: str, password: str) -> UserModel:
+        # validate password
+        if " " in password:
+            exc = CustomHTTPExc(
+                status_code=400,
+                message="Password cannot contain spaces",
+            )
+            logger.error(exc)
+            raise exc
+
         user = self.user_repo.getByUsername(username)
         if user:
             exc = CustomHTTPExc(
