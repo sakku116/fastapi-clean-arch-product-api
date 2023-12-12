@@ -1,7 +1,7 @@
+import time
 from uuid import uuid4
 
-import bcrypt
-import jwt
+from bson import Int64
 
 
 def parseBool(source: any) -> bool:
@@ -14,5 +14,5 @@ def generateUUID() -> str:
     return str(uuid4())
 
 
-def encodeJWT(payload: dict, secret: str) -> str:
-    return jwt.encode(payload, secret, algorithm="HS256")
+def generateTimeNowEpoch() -> Int64:
+    return Int64(time.time())
