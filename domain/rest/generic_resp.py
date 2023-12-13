@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Union
 
 from pydantic import BaseModel
 
@@ -16,7 +16,7 @@ M = TypeVar("M", bound=BaseModel)
 class BaseResp(BaseModel):
     error: bool = False
     message: str = "OK"
-    error_detail: str = ""
+    error_detail: Union[str, list, dict, None] = None
 
 
 class RespData(BaseResp, Generic[M]):

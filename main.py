@@ -8,12 +8,13 @@ from datetime import datetime
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 from pytz import timezone
 from uvicorn.config import LOGGING_CONFIG
 
 from config.env import Env
 from config.mongodb import getMongoDB
-from core.exceptions import handlers as exception_utils
+from core.exceptions import handlers as exception_handlers
 from core.exceptions.http import CustomHTTPExc
 from core.logging import PackagePathFilter
 from repository.user import UserRepo
@@ -48,8 +49,9 @@ LOGGING_CONFIG["formatters"]["access"]["datefmt"] = "%d-%m-%Y %H:%M:%S"
 app = FastAPI()
 
 # register exception handlers
-app.add_exception_handler(CustomHTTPExc, exception_utils.customHttpExceptionHandler)
-app.add_exception_handler(Exception, exception_utils.defaultHttpExceptionHandler)
+app.add_exception_handler(CustomHTTPExc, exception_handlers.customHttpExceptionHandler)
+app.add_exception_handler(RequestValidationError, exception_handlers.reqValidationErrExceptionHandler)
+app.add_exception_handler(Exception, exception_handlers.defaultHttpExceptionHandler)
 
 # register middlewares
 app.add_middleware(
