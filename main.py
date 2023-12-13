@@ -13,12 +13,12 @@ from uvicorn.config import LOGGING_CONFIG
 
 from config.env import Env
 from config.mongodb import getMongoDB
+from core.exceptions import handlers as exception_utils
 from core.exceptions.http import CustomHTTPExc
 from core.logging import PackagePathFilter
 from repository.user import UserRepo
 from router.auth import AuthRouter
 from router.user import UserRouter
-from utils import exception as exception_utils
 from utils import mongodb as mongodb_utils
 from utils.seeder import users as users_seeder
 
