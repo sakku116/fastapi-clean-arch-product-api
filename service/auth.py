@@ -38,6 +38,14 @@ class AuthService:
             logger.error(exc)
             raise exc
 
+        if not user.is_active:
+            exc = CustomHTTPExc(
+                status_code=401,
+                message="User disabled",
+            )
+            logger.error(exc)
+            raise exc
+
         jwt_payload = user.model_dump()
         jwt_payload["user_id"] = user.id
         jwt_payload["exp"] = datetime.now() + timedelta(hours=Env.JWT_EXP)
@@ -83,6 +91,14 @@ class AuthService:
             logger.error(exc)
             raise exc
 
+        if not user.is_active:
+            exc = CustomHTTPExc(
+                status_code=401,
+                message="User disabled",
+            )
+            logger.error(exc)
+            raise exc
+
         return user
 
     def refreshToken(self, refresh_token: str) -> tuple[str, str]:
@@ -109,6 +125,14 @@ class AuthService:
             exc = CustomHTTPExc(
                 status_code=401,
                 message="Invalid token",
+            )
+            logger.error(exc)
+            raise exc
+
+        if not user.is_active:
+            exc = CustomHTTPExc(
+                status_code=401,
+                message="User disabled",
             )
             logger.error(exc)
             raise exc
