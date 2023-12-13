@@ -20,3 +20,6 @@ class GetUserByIdResp(BaseUserResp, BaseModelSchema):
 
 class PostCreateUserResp(BaseUserResp, BaseModelSchema):
     pass
+
+class PatchUserResp(BaseUserResp, BaseModelSchema):
+    pass

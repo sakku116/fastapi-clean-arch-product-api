@@ -11,3 +11,9 @@ class PostCreateUserReq(BaseModel):
     username: str
     password: str
     role: Literal["admin", "user"]
+
+class PatchUserReq(BaseModel):
+    username: str = None
+    password: str = None
+    role: Literal["admin", "user", None] = None
+    is_active: bool = None
