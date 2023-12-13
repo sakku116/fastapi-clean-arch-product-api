@@ -1,7 +1,7 @@
 
 from fastapi import APIRouter, Depends
 
-from core.dependencies import adminOnly, verifyToken
+from core.dependencies import verifyToken
 from domain.rest import generic_resp
 from service.product import ProductService
 
