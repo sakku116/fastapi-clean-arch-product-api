@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends
 
 from core.dependencies import adminOnly
-from domain.rest import user_req
-from service.user import UserService
-from domain.rest import generic_resp, user_resp
-from utils.resp import respBuilder
 from domain.model.user import UserModel
+from domain.rest import generic_resp, user_req, user_resp
+from service.user import UserService
+from utils.resp import respBuilder
 
 UserRouter = APIRouter(
     prefix="/users",
@@ -22,14 +21,12 @@ def get_users(
     user_service: UserService = Depends(),
 ):
     user_list, user_count = user_service.get_list(schema=query)
-    return respBuilder(
-        base_resp=generic_resp.RespPaginatedData(
-            pagination_meta=generic_resp.PaginationMeta(
-                total=user_count, page=query.page, limit=query.limit
-            ),
+
+    return generic_resp.RespPaginatedData[user_resp.GetUsersResp](
+        pagination_meta=generic_resp.PaginationMeta(
+            total=user_count, page=query.page, limit=query.limit
         ),
-        data_schema=user_resp.GetUsersResp,
-        data=user_list,
+        data=[user.model_dump() for user in user_list],
     )
 
 
@@ -41,8 +38,33 @@ def get_user_by_id(
     user_service: UserService = Depends(),
 ):
     user = user_service.getById(id)
-    return respBuilder(
-        base_resp=generic_resp.RespData(),
-        data_schema=user_resp.GetUserByIdResp,
-        data=user,
+    return generic_resp.RespData[user_resp.GetUserByIdResp](
+        data=user.model_dump(),
+    )
+
+
+@UserRouter.post("", response_model=generic_resp.RespData[user_resp.PostCreateUserResp])
+def create_user(
+    payload: user_req.PostCreateUserReq,
+    user_service: UserService = Depends(),
+    current_user: UserModel = Depends(adminOnly),
+):
+    user = user_service.createUser(schema=payload, curr_user_id=current_user.id)
+    return generic_resp.RespData[user_resp.PostCreateUserResp](
+        data=user.model_dump(),
+    )
+
+
+@UserRouter.patch(
+    "/{id}", response_model=generic_resp.RespData[user_resp.PatchUserResp]
+)
+def patch_user(
+    id: str,
+    payload: user_req.PatchUserReq,
+    user_service: UserService = Depends(),
+    current_user: UserModel = Depends(adminOnly),
+):
+    user = user_service.patchUser(id=id, schema=payload, curr_user_id=current_user.id)
+    return generic_resp.RespData[user_resp.PatchUserResp](
+        data=user.model_dump(),
     )
