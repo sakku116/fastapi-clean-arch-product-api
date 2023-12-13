@@ -29,9 +29,7 @@ class PaginationMeta(BaseModel):
     page_total: int = 0
     page_num_list: list[int] = [0]
 
-    def __init__(
-        self, total: int = 0, page: int = 0, limit: int = 0, show_all: bool = False
-    ):
+    def __init__(self, total: int, page: int, limit: int, show_all: bool = False):
         """
         attributes will be calculated automatically by inputed __init__() args
         """
@@ -46,5 +44,5 @@ class PaginationMeta(BaseModel):
 
 
 class RespPaginatedData(BaseResp, Generic[M]):
-    pagination_meta: PaginationMeta = PaginationMeta()
+    pagination_meta: PaginationMeta = PaginationMeta(total=0, page=0, limit=0)
     data: list[M] = []
