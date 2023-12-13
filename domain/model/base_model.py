@@ -12,6 +12,9 @@ class _MyBaseModel_Index(BaseModel):
 
 
 class MyBaseModel(BaseModel):
+    """
+    id field already indexed by default, but it need to be indexed manually if you set the _indexes field.
+    """
     _coll_name: str = ""
     _indexes: list[_MyBaseModel_Index] = [
         _MyBaseModel_Index(keys=[("id", 1)], unique=True)
