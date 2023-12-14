@@ -68,3 +68,10 @@ def patch_user(
     return generic_resp.RespData[user_resp.PatchUserResp](
         data=user.model_dump(),
     )
+
+@UserRouter.delete("/{id}", response_model=generic_resp.BaseResp)
+def delete_user(id: str, user_service: UserService = Depends()):
+    deleted_user = user_service.deleteUser(id=id)
+    return generic_resp.BaseResp(
+        message=f"User {deleted_user.username} deleted successfully",
+    )

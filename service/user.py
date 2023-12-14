@@ -126,3 +126,14 @@ class UserService:
             raise exc
 
         return updated_user
+
+    def deleteUser(self, id: str) -> UserModel:
+        deleted_user = self.user_repo.delete(id=id)
+        if not deleted_user:
+            exc = CustomHTTPExc(
+                status_code=404,
+                message=f"User with id {id} not found",
+            )
+            logger.error(exc)
+            raise exc
+        return deleted_user
